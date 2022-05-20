@@ -12,7 +12,7 @@ CREATE TABLE department(
 USE business_db;
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE roles(
-    id INT NOT NULL PRIMARY KEY,
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL UNIQUE,
     salary DECIMAL NOT NULL,
     department_id INT,

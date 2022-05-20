@@ -1,0 +1,26 @@
+{
+  "name": "challenge-12_carls-emplyee-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarlJMcGee/Challenge-12_Carls-Emplyee-Management.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CarlJMcGee/Challenge-12_Carls-Emplyee-Management/issues"
+  },
+  "homepage": "https://github.com/CarlJMcGee/Challenge-12_Carls-Emplyee-Management#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.4",
+    "inquirer-press-to-continue": "^1.1.2",
+    "mysql2": "^2.3.3"
+  }
+}
