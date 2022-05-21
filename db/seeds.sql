@@ -49,10 +49,11 @@ SELECT
     roles.title as job_title,
     roles.salary as salary,
     department.dep_name as department,
-    employees.manager_id as manager
-FROM employees
-JOIN roles ON employees.role_id = roles.id
-JOIN department ON roles.department_id = department.id
+CONCAT(manager.first_name, ' ', manager.last_name) 
+AS manager FROM employees 
+LEFT JOIN roles on employees.role_id = roles.id 
+LEFT JOIN department on roles.department_id = department.id 
+LEFT JOIN employees manager on manager.id = employees.manager_id
 
 
 -- @BLOCK

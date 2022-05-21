@@ -47,11 +47,12 @@ const viewEmpl = function () {
     roles.title as Job_Title,
     roles.salary as Salary,
     department.dep_name as Department,
-    employees.manager_id as Manager
-FROM employees
-JOIN roles ON employees.role_id = roles.id
-JOIN department ON roles.department_id = department.id
-ORDER BY id`,
+    CONCAT(manager.first_name, ' ', manager.last_name)
+    AS manager FROM employees
+    LEFT JOIN roles ON employees.role_id = roles.id
+    LEFT JOIN department ON roles.department_id = department.id
+    LEFT JOIN employees manager ON manager.id = employees.manager_id
+    ORDER BY id`,
     (err, rows, fields) => {
       console.table(rows);
       return promptInit();

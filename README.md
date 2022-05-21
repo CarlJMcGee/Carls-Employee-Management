@@ -54,4 +54,4 @@ or
 
 If you have any other questions or inquiries, you can contact me at [carl.jack.mcgee@gmail.com](mailto:carl.jack.mcgee@gmail.com)
 
-## [Click here for a video demo](link)
+## [Click here for a video demo](https://youtu.be/U31GEqIUmII)
