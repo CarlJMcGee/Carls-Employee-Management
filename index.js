@@ -75,7 +75,7 @@ const addDep = function () {
           VALUES (?)`,
         [ans.depName],
         (err, rows) => {
-          console.log(rows);
+          console.log("Department Added");
           return promptInit();
         }
       );
@@ -121,7 +121,6 @@ const addRole = function () {
       depId = depObj.filter((item) => {
         return item.dep_name === ans.dep;
       })[0].id;
-      console.log(depId);
       connection.execute(
         `INSERT INTO roles (title, salary, department_id)
           VALUES (?, ?, ?)`,
@@ -190,11 +189,9 @@ const addEmpl = function () {
     ])
     .then((ans) => {
       let manID = manNames.indexOf(ans.manager, 0) + 1;
-      console.log(manID);
       let roleID = roleObj.filter((item) => {
         return item.title === ans.role;
       })[0].id;
-      console.log(roleID);
       connection.execute(
         `INSERT INTO employees (first_name, last_name, role_id, manager_id)
               VALUES (?, ?, ?, ?)`,
@@ -260,7 +257,7 @@ const updateRole = function () {
           if (err) {
             console.error(err);
           }
-          console.log(rows);
+          console.log("Employee Role Updated");
           promptInit();
         }
       );
