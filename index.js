@@ -130,6 +130,7 @@ const addRole = function () {
             console.error(err);
           }
           console.log("Role Added!");
+          return promptInit();
         }
       );
     });
