@@ -1,4 +1,6 @@
 const inquirer = require("inquirer");
+const inquirerPrompt = require("inquirer-autocomplete-prompt");
+inquirer.registerPrompt("autocomplete", inquirerPrompt);
 const mysql = require("mysql2");
 const cTable = require("console.table");
 const InputPrompt = require("inquirer/lib/prompts/input");
@@ -128,8 +130,138 @@ const addRole = function () {
           if (err) {
             console.error(err);
           }
-          console.log(rows);
           console.log("Role Added!");
+        }
+      );
+    });
+};
+
+const addEmpl = function () {
+  let manArr = [];
+  let manNames = [];
+  connection.execute(
+    `SELECT employees.id, employees.first_name, employees.last_name FROM employees ORDER BY id`,
+    (err, rows) => {
+      rows.forEach((item) => {
+        manArr.push(Object.values(item));
+      });
+      manArr.forEach((item) => {
+        item.splice(0, 1);
+        let joined = item.join(" ");
+        manNames.push(joined);
+      });
+    }
+  );
+
+  let roleObj = {};
+  connection.execute(
+    `SELECT roles.id, roles.title FROM roles ORDER BY id`,
+    (err, rows) => {
+      roleObj = rows;
+    }
+  );
+
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first",
+        message: `Enter New Employee's First Name:`,
+        validate: (input) => (input ? true : false),
+      },
+      {
+        type: "input",
+        name: "last",
+        message: `Enter New Employee's Last Name:`,
+        validate: (input) => (input ? true : false),
+      },
+      {
+        type: "input",
+        name: "role",
+        message: `Enter New Employee's Role:`,
+        validate: (input) => (input ? true : false),
+      },
+      {
+        type: "input",
+        name: "manager",
+        message: `Enter New Employee's Manager:`,
+        validate: (input) => (input ? true : false),
+      },
+    ])
+    .then((ans) => {
+      let manID = manNames.indexOf(ans.manager, 0) + 1;
+      console.log(manID);
+      let roleID = roleObj.filter((item) => {
+        return item.title === ans.role;
+      })[0].id;
+      console.log(roleID);
+      connection.execute(
+        `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+              VALUES (?, ?, ?, ?)`,
+        [ans.first, ans.last, roleID, manID],
+        (err, rows) => {
+          if (err) {
+            console.error(err);
+          }
+          console.log("Employee Added");
+          promptInit();
+        }
+      );
+    });
+};
+
+const updateRole = function () {
+  let roleObj = {};
+  connection.execute(
+    `SELECT roles.id, roles.title FROM roles ORDER BY id`,
+    (err, rows) => {
+      roleObj = rows;
+    }
+  );
+  let empArr = [];
+  let empNames = [];
+  connection.execute(
+    `SELECT employees.id, employees.first_name, employees.last_name FROM employees ORDER BY id`,
+    (err, rows) => {
+      rows.forEach((item) => {
+        empArr.push(Object.values(item));
+      });
+      empArr.forEach((item) => {
+        item.splice(0, 1);
+        let joined = item.join(" ");
+        empNames.push(joined);
+      });
+    }
+  );
+
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: `Enter Employee's Name`,
+        validate: (input) => (input ? true : false),
+      },
+      {
+        type: "input",
+        name: "role",
+        message: "Enter Role Title:",
+      },
+    ])
+    .then((ans) => {
+      let roleID = roleObj.filter((item) => {
+        return item.title === ans.role;
+      })[0].id;
+      let EID = empNames.indexOf(ans.name, 0) + 1;
+      connection.execute(
+        `UPDATE employees SET role_id = ? WHERE id = ?`,
+        [roleID, EID],
+        (err, rows) => {
+          if (err) {
+            console.error(err);
+          }
+          console.log(rows);
+          promptInit();
         }
       );
     });
@@ -150,9 +282,10 @@ const promptInit = function () {
           "Add a Role",
           "Add an Employee",
           "Update an Employee's Role",
-          "Exit",
+          "Press ctrl C to Exit",
         ],
         loop: false,
+        pageSize: 8,
       },
     ])
     .then((ans) => {
@@ -171,6 +304,14 @@ const promptInit = function () {
           break;
         case "Add a Role":
           return addRole();
+          break;
+        case "Add an Employee":
+          return addEmpl();
+          break;
+        case "Update an Employee's Role":
+          return updateRole();
+          break;
+        case "Exit":
           break;
       }
     });
